@@ -1,0 +1,7 @@
+DB_HOST=postgres
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=subscriptions
+SERVER_PORT=8080
+LOG_LEVEL=info
