@@ -156,12 +156,10 @@ func setupRoutes(mux *http.ServeMux, h *handler.SubscriptionHandler) {
 		w.Write([]byte("OK"))
 	})
 
-	// Раздача swagger.json
 	mux.HandleFunc("GET /swagger/doc.json", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./docs/swagger.json")
 	})
 
-	// Swagger UI с указанием URL документации
 	mux.Handle("/swagger/", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json"),
 	))

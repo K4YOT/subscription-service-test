@@ -378,8 +378,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "Сервис для управления подписками пользователей",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {

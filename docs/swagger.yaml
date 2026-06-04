@@ -1,0 +1,241 @@
+basePath: /
+definitions:
+  model.CreateSubscriptionRequest:
+    properties:
+      end_date:
+        type: string
+      price:
+        type: integer
+      service_name:
+        type: string
+      start_date:
+        description: '"MM-YYYY"'
+        type: string
+      user_id:
+        type: string
+    type: object
+  model.Subscription:
+    properties:
+      end_date:
+        type: string
+      id:
+        type: string
+      price:
+        type: integer
+      service_name:
+        type: string
+      start_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+  model.UpdateSubscriptionRequest:
+    properties:
+      end_date:
+        type: string
+      price:
+        type: integer
+      service_name:
+        type: string
+      start_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://www.example.com/support
+  description: Сервис для управления подписками пользователей
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Subscription Service API
+  version: "1.0"
+paths:
+  /subscriptions:
+    get:
+      description: Возвращает список подписок с фильтрацией и пагинацией
+      parameters:
+      - description: Название сервиса
+        in: query
+        name: service_name
+        type: string
+      - description: ID пользователя (UUID)
+        in: query
+        name: user_id
+        type: string
+      - description: Количество записей (по умолчанию 20)
+        in: query
+        name: limit
+        type: integer
+      - description: Сдвиг для пагинации
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Subscription'
+            type: array
+        "500":
+          description: Внутренняя ошибка
+          schema:
+            type: string
+      summary: Список подписок
+      tags:
+      - subscriptions
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новую подписку в систему
+      parameters:
+      - description: Данные подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateSubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Неверный запрос
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка
+          schema:
+            type: string
+      summary: Создать подписку
+      tags:
+      - subscriptions
+  /subscriptions/{id}:
+    delete:
+      description: Удаляет подписку по ID
+      parameters:
+      - description: UUID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Подписка не найдена
+          schema:
+            type: string
+      summary: Удалить подписку
+      tags:
+      - subscriptions
+    get:
+      description: Возвращает одну подписку
+      parameters:
+      - description: UUID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Неверный ID
+          schema:
+            type: string
+        "404":
+          description: Подписка не найдена
+          schema:
+            type: string
+      summary: Получить подписку по ID
+      tags:
+      - subscriptions
+    put:
+      consumes:
+      - application/json
+      description: Полностью заменяет данные подписки
+      parameters:
+      - description: UUID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Новые данные
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateSubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Ошибка в данных
+          schema:
+            type: string
+        "404":
+          description: Подписка не найдена
+          schema:
+            type: string
+      summary: Обновить подписку
+      tags:
+      - subscriptions
+  /subscriptions/total-cost:
+    get:
+      description: Вычисляет сумму цен подписок, попадающих в указанный интервал
+      parameters:
+      - description: Начало периода (MM-YYYY)
+        in: query
+        name: start_period
+        required: true
+        type: string
+      - description: Конец периода (MM-YYYY)
+        in: query
+        name: end_period
+        required: true
+        type: string
+      - description: Фильтр по ID пользователя
+        in: query
+        name: user_id
+        type: string
+      - description: Фильтр по названию сервиса
+        in: query
+        name: service_name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Неверный формат даты или параметры
+          schema:
+            type: string
+      summary: Суммарная стоимость подписок за период
+      tags:
+      - subscriptions
+swagger: "2.0"
