@@ -1,7 +1,44 @@
-DB_HOST=postgres
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_NAME=subscriptions
-SERVER_PORT=8080
-LOG_LEVEL=info
+services:
+  postgres:
+    image: postgres:15
+    container_name: subscription_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: subscriptions
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  app:
+    build: .
+    container_name: subscription_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: subscriptions
+      SERVER_PORT: 8080
+      LOG_LEVEL: debug
+    networks:
+      - app_network
+
+volumes:
+  pgdata:
+
+networks:
+  app_network:

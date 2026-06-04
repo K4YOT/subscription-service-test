@@ -26,9 +26,9 @@ func Load() *Config {
 	}
 }
 
-func getEnv(key, defaultValue string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
+func getEnv(key, def string) string {
+	if val := os.Getenv(key); val != "" {
+		return val
 	}
-	return defaultValue
+	return def
 }

@@ -15,9 +15,17 @@ type Subscription struct {
 }
 
 type CreateSubscriptionRequest struct {
-	ServiceName string    `json:"service_name"`
-	Price       int       `json:"price"`
-	UserID      uuid.UUID `json:"user_id"`
-	StartDate   string    `json:"start_date"` // формат "MM-YYYY"
-	EndDate     string    `json:"end_date,omitempty"`
+	ServiceName string `json:"service_name"`
+	Price       int    `json:"price"`
+	UserID      string `json:"user_id"`
+	StartDate   string `json:"start_date"` // "MM-YYYY"
+	EndDate     string `json:"end_date,omitempty"`
+}
+
+type UpdateSubscriptionRequest struct {
+	ServiceName string `json:"service_name"`
+	Price       int    `json:"price"`
+	UserID      string `json:"user_id"`
+	StartDate   string `json:"start_date"`
+	EndDate     string `json:"end_date,omitempty"`
 }
